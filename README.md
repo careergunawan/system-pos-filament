@@ -38,3 +38,59 @@ sudo update-alternatives --display php
 # Step 6: Change the PHP version again (if needed)
 # To change the PHP version again, run the command:
 sudo update-alternatives --config php
+
+# Step 7: Install PostgreSQL and PostgreSQL Client
+# Update and install PostgreSQL and its client
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+sudo apt-get install postgresql-client
+
+# Check the installed version of PostgreSQL
+psql --version
+
+# Step 8: Start and check the status of PostgreSQL service
+sudo service postgresql start
+sudo systemctl status postgresql
+
+# Check PostgreSQL processes
+ps aux | grep postgres
+
+# Step 9: Configure PostgreSQL and create a database
+# Log in as the 'postgres' user
+sudo -u postgres psql
+
+# Change the password for the postgres user
+ALTER USER postgres WITH PASSWORD 'password';
+
+# Create a new database
+CREATE DATABASE system_pos;
+
+# Exit PostgreSQL
+\q
+
+# Step 10: Configure Laravel to use PostgreSQL
+# Update the `.env` file for Laravel database configuration
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=system_pos
+DB_USERNAME=postgres
+DB_PASSWORD=password
+
+# Clear the Laravel configuration cache
+php artisan config:clear
+
+# Run Laravel migrations
+php artisan migrate
+
+# Step 11: Verify the PostgreSQL database setup
+# Log in to PostgreSQL and check the tables in the database
+psql -h 127.0.0.1 -U postgres -d system_pos
+\dt
+
+# Step 12: Additional PostgreSQL commands
+# View the PostgreSQL log for troubleshooting
+sudo tail -f /var/log/postgresql/postgresql-12-main.log
+
+# Restart the PostgreSQL service
+sudo service postgresql restart
